@@ -1,4 +1,4 @@
-const game = new PIXI.Application({ backgroundColor: 0, width: 1366, height: 768 });
+const game = new PIXI.Application({ backgroundColor: 0, width: innerWidth, height: innerHeight });
 
 const velocity = {
     rotation: 0,
@@ -8,7 +8,8 @@ const velocity = {
 
 const ASSETS = {
     spaceship: '/res/ship_noshield.png',
-    spaceshipThrusting: '/res/ship_noshield_thruster.png'
+    spaceshipThrusting: '/res/ship_noshield_thruster.png',
+    asteroidLarge: '/res/asteroid_large.png',
 };
 
 document.body.appendChild(game.view);
@@ -23,24 +24,15 @@ function loadAssets() {
     }
 
     loader.load((loader, resources) => {
-        spaceship = sprites.spaceship = new PIXI.Sprite(resources.spaceship.texture);
-        // Setup the position of the spaceship
-    window.resources = resources;
-    spaceship.x = game.renderer.width / 2;
-    spaceship.y = game.renderer.height / 2;
-    spaceship.scale.x = .07;
-    spaceship.scale.y = .07;
+        window.resources = resources;
+        let spaceship = new Ship(game.renderer.width / 2, game.renderer.height / 2);
 
-    // Rotate around the center
-    spaceship.anchor.x = 0.5;
-    spaceship.anchor.y = 0.5;
-
-    // Add the spaceship to the scene we are building
-    game.stage.addChild(spaceship);
+        assetsLoaded();
 
         // Listen for frame updates
         game.ticker.add(() => {
-            moveSpaceship();
+            spaceship.tick();
+            moveAsteroids();
         });
     });
 }
@@ -49,8 +41,8 @@ loadAssets();
 
 function moveSpaceship() {
     if (KeyEvents.w) {
-        velocity.x = velocity.x + 1 * Math.cos(spaceship.rotation);
-        velocity.y = velocity.y + 1 * Math.sin(spaceship.rotation);
+        velocity.x = velocity.x + 0.5 * Math.cos(spaceship.rotation);
+        velocity.y = velocity.y + 0.5 * Math.sin(spaceship.rotation);
         spaceship.setTexture(resources.spaceshipThrusting.texture);
     } else {
         spaceship.setTexture(resources.spaceship.texture);
@@ -66,8 +58,8 @@ function moveSpaceship() {
 
     spaceship.rotation += velocity.rotation;
 
-    velocity.x *= 0.95;
-    velocity.y *= 0.95;
+    velocity.x *= 0.99;
+    velocity.y *= 0.99;
     velocity.rotation *= 0.6;
 
     if (spaceship.x < 0) spaceship.x = game.renderer.width;
