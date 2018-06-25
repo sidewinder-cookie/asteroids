@@ -1,4 +1,4 @@
-const SPEED = 5;
+const SPEED = 7;
 
 class Bullet {
     constructor(x, y, rotation, container) {
