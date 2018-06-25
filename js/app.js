@@ -1,7 +1,12 @@
 const game = new PIXI.Application();
 
+const velocity = {
+    rotation: 0,
+    movement: 0,
+};
+
 const ASSETS = {
-    spaceship: 'http://gipsypixel.com/wp-content/uploads/2017/11/Desktop-For-Cute-Cat-Wallpapercom-Animals-Images-Hd-Pics-Smartphone.jpg',
+    spaceship: 'https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX25389179.jpg',
 };
 
 document.body.appendChild(game.view);
@@ -28,12 +33,33 @@ function loadAssets() {
     // Add the spaceship to the scene we are building
     game.stage.addChild(spaceship);
 
-    // Listen for frame updates
-    game.ticker.add(() => {
-         // each frame we spin the spaceship around a bit
-        spaceship.rotation += 0.01;
-    });
+        // Listen for frame updates
+        game.ticker.add(() => {
+            moveSpaceship();
+        });
     });
 }
 
 loadAssets();
+
+function moveSpaceship() {
+    if (KeyEvents.w) {
+        velocity.movement += 0.5;
+    }
+    if (KeyEvents.s) {
+        velocity.movement -= 0.5;
+    }
+    if (KeyEvents.a) {
+        velocity.rotation -= 0.01;
+    }
+    if (KeyEvents.d) {
+        velocity.rotation += 0.01;
+    }
+    spaceship.x = spaceship.x + velocity.movement * Math.cos(spaceship.rotation);
+    spaceship.y = spaceship.y + velocity.movement * Math.sin(spaceship.rotation);
+
+    spaceship.rotation += velocity.rotation;
+
+    velocity.movement *= 0.9;
+    velocity.rotation *= 0.9;
+}
