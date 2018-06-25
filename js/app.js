@@ -1,18 +1,41 @@
 const game = new PIXI.Application({ backgroundColor: 0, width: innerWidth, height: innerHeight });
 
-const velocity = {
-    rotation: 0,
-    x: 0,
-    y: 0
-};
-
-const ASSETS = {
-    spaceship: '/res/ship_noshield.png',
-    spaceshipThrusting: '/res/ship_noshield_thruster.png',
-    asteroidLarge: '/res/asteroid_large.png',
-};
-
 document.body.appendChild(game.view);
+
+var shaking = 0;
+
+var state = {
+    lives: 3,
+    score: 0,
+};
+
+function getDistance(s1, s2) {
+    return Math.sqrt(
+        Math.pow(s1.sprite.position.x - s2.sprite.position.x, 2) +
+        Math.pow(s1.sprite.position.y - s2.sprite.position.y, 2)
+    );
+}
+
+const _ASSETS = [
+    'asteroid_large',
+    'asteroid_large2',
+    'asteroid_large3',
+    'asteroid_medium',
+    'asteroid_medium2',
+    'asteroid_medium3',
+    'asteroid_small',
+    'asteroid_small2',
+    'asteroid_small3',
+    'background',
+    'ship_noshield_thruster',
+    'ship_noshield',
+    'ship_shield_thruster',
+    'ship_shield',
+]
+
+const ASSETS = {};
+
+_ASSETS.map(f => ASSETS[f] = `/res/${f}.png`);
 
 const sprites = {};
 
@@ -25,14 +48,45 @@ function loadAssets() {
 
     loader.load((loader, resources) => {
         window.resources = resources;
-        let spaceship = new Ship(game.renderer.width / 2, game.renderer.height / 2);
+        window.spaceship = new Ship(game.renderer.width / 2, game.renderer.height / 2);
 
         assetsLoaded();
+
+        let scoreText = new PIXI.Text(`Score: 0\n\nLives: 3`, { fill: 0xFFFFFF, fontFamily: 'emulogic' });
+        scoreText.position.set(15, 15);
+        game.stage.addChild(scoreText);
+
+        let gameOver = new PIXI.Text('Game Over', { fill: 0xFFFFFF, fontFamily: 'emulogic' });
+        gameOver.anchor.x = 0.5;
+        gameOver.anchor.y = 0.5;
+        gameOver.position.set(game.renderer.width / 2, game.renderer.height / 2);
 
         // Listen for frame updates
         game.ticker.add(() => {
             spaceship.tick();
             moveAsteroids();
+
+            scoreText.text = `Score: ${state.score}\n\nLives: ${state.lives > 0 ? '❤'.repeat(state.lives) : '😞'} `;
+
+            if (shaking > 0) {
+                let amount = shaking * 2;
+                game.stage.x = (Math.random() * amount) - amount;
+                game.stage.y = (Math.random() * amount) - amount;
+                shaking--;
+            } else {
+                game.stage.x = 0;
+                game.stage.y = 0;
+            }
+
+            if (game.renderer.backgroundColor !== 0) {
+                game.renderer.backgroundColor -= 0x0F0000;
+                game.renderer.backgroundColor = Math.max(game.renderer.backgroundColor,
+                    state.lives > 0 ? 0 : 0x550000);
+            }
+
+            if (state.lives <= 0) {
+                game.stage.addChild(gameOver);
+            }
         });
     });
 }
