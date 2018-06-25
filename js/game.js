@@ -1,31 +1,65 @@
-// The application will create a renderer using WebGL, if possible,
-// with a fallback to a canvas render. It will also setup the ticker
-// and the root stage PIXI.Container
-const app = new PIXI.Application();
+const game = new PIXI.Application();
 
-// The application will create a canvas element for you that you
-// can then insert into the DOM
-document.body.appendChild(app.view);
+const velocity = {
+    rotation: 0,
+    movement: 0,
+};
 
-// load the texture we need
-PIXI.loader.add('bunny', 'http://gipsypixel.com/wp-content/uploads/2017/11/Desktop-For-Cute-Cat-Wallpapercom-Animals-Images-Hd-Pics-Smartphone.jpg').load((loader, resources) => {
-    // This creates a texture from a 'bunny.png' image
-    const bunny = new PIXI.Sprite(resources.bunny.texture);
+const ASSETS = {
+    spaceship: 'https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX25389179.jpg',
+};
 
-    // Setup the position of the bunny
-    bunny.x = app.renderer.width / 2;
-    bunny.y = app.renderer.height / 2;
+document.body.appendChild(game.view);
+
+const sprites = {};
+
+function loadAssets() {
+    const loader = PIXI.loader;
+
+    for (const asset in ASSETS) {
+        loader.add(asset, ASSETS[asset]);
+    }
+
+    loader.load((loader, resources) => {
+        spaceship = sprites.spaceship = new PIXI.Sprite(resources.spaceship.texture);
+        // Setup the position of the spaceship
+    spaceship.x = game.renderer.width / 2;
+    spaceship.y = game.renderer.height / 2;
 
     // Rotate around the center
-    bunny.anchor.x = 0.5;
-    bunny.anchor.y = 0.5;
+    spaceship.anchor.x = 0.5;
+    spaceship.anchor.y = 0.5;
 
-    // Add the bunny to the scene we are building
-    app.stage.addChild(bunny);
+    // Add the spaceship to the scene we are building
+    game.stage.addChild(spaceship);
 
-    // Listen for frame updates
-    app.ticker.add(() => {
-         // each frame we spin the bunny around a bit
-        bunny.rotation += 0.01;
+        // Listen for frame updates
+        game.ticker.add(() => {
+            moveSpaceship();
+        });
     });
-});
+}
+
+loadAssets();
+
+function moveSpaceship() {
+    if (KeyEvents.w) {
+        velocity.movement += 0.5;
+    }
+    if (KeyEvents.s) {
+        velocity.movement -= 0.5;
+    }
+    if (KeyEvents.a) {
+        velocity.rotation -= 0.01;
+    }
+    if (KeyEvents.d) {
+        velocity.rotation += 0.01;
+    }
+    spaceship.x = spaceship.x + velocity.movement * Math.cos(spaceship.rotation);
+    spaceship.y = spaceship.y + velocity.movement * Math.sin(spaceship.rotation);
+
+    spaceship.rotation += velocity.rotation;
+
+    velocity.movement *= 0.9;
+    velocity.rotation *= 0.9;
+}
