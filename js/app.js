@@ -22,8 +22,8 @@ function loadAssets() {
     spaceship.y = game.renderer.height / 2;
 
     // Rotate around the center
-    spaceship.anchor.x = 0.5;
-    spaceship.anchor.y = 0.5;
+    spaceship.anchor.x = 0;
+    spaceship.anchor.y = 0;
 
     // Add the spaceship to the scene we are building
     game.stage.addChild(spaceship);
