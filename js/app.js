@@ -1,4 +1,4 @@
-const game = new PIXI.Application();
+const game = new PIXI.Application({ backgroundColor: 0xFFFFFF  });
 
 const velocity = {
     rotation: 0,
@@ -6,7 +6,7 @@ const velocity = {
 };
 
 const ASSETS = {
-    spaceship: 'https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX25389179.jpg',
+    spaceship: '/res/ship_noshield.png',
 };
 
 document.body.appendChild(game.view);
@@ -25,6 +25,8 @@ function loadAssets() {
         // Setup the position of the spaceship
     spaceship.x = game.renderer.width / 2;
     spaceship.y = game.renderer.height / 2;
+    spaceship.scale.x = .25;
+    spaceship.scale.y = .25;
 
     // Rotate around the center
     spaceship.anchor.x = 0.5;
