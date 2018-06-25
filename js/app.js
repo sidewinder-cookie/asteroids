@@ -62,6 +62,6 @@ function moveSpaceship() {
 
     spaceship.rotation += velocity.rotation;
 
-    velocity.movement *= 0.9;
+    velocity.movement *= 0.99;
     velocity.rotation *= 0.9;
 }
