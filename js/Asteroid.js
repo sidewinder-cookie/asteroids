@@ -59,9 +59,10 @@ class Asteroid {
 
     checkCollisionWithShip() {
         let distance = getDistance(this, spaceship);
-        if (distance < this.sprite.width / 2) {
+        if (distance < this.sprite.width / 2 && state.invulnerable <= 0) {
             state.lives--;
             if (state.lives <= 0) KeyEvents = {};
+            state.invulnerable = 50;
             this.remove();
             shaking = 50;
             game.renderer.backgroundColor = 0xFF0000;
@@ -79,7 +80,7 @@ class Asteroid {
         state.score++;
         window.shaking = (SIZES.indexOf(this.size) + 1) * 5;
         if (this.size !== 'small') {
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 10; i++) {
                 asteroids.push(new Asteroid(
                     randomBetween(-20, 20) + this.sprite.x,
                     randomBetween(-20, 20) + this.sprite.y,

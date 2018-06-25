@@ -7,6 +7,7 @@ var shaking = 0;
 var state = {
     lives: 3,
     score: 0,
+    invulnerable: 0,
 };
 
 function getDistance(s1, s2) {
@@ -66,7 +67,7 @@ function loadAssets() {
             spaceship.tick();
             moveAsteroids();
 
-            scoreText.text = `Score: ${state.score}\n\nLives: ${state.lives > 0 ? '❤'.repeat(state.lives) : '😞'} `;
+            scoreText.text = `Score: ${state.score}\n\nLives: ${state.lives > 0 ? '💖'.repeat(state.lives) : '😞'} `;
 
             if (shaking > 0) {
                 let amount = shaking * 2;
@@ -77,6 +78,8 @@ function loadAssets() {
                 game.stage.x = 0;
                 game.stage.y = 0;
             }
+
+            if (state.invulnerable > 0) state.invulnerable--;
 
             if (game.renderer.backgroundColor !== 0) {
                 game.renderer.backgroundColor -= 0x0F0000;
