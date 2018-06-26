@@ -64,6 +64,10 @@ class Asteroid {
                 spaceship.powerups.delete('shield');
             } else {
                 state.lives--;
+                if (state.lives === 0) {
+                    document.getElementById("theme").pause();
+                    Sounds.death.play();
+                }
             }
             if (state.lives <= 0) KeyEvents = {};
             state.invulnerable = 50;
@@ -80,6 +84,12 @@ class Asteroid {
     }
 
     break() {
+        const k = {
+            'large': 'bangLarge',
+            'medium': 'bangMedium',
+            'small': 'bangSmall',
+        };
+        Sounds[k[this.size]].play();
         this.remove();
         state.score++;
         window.shaking = (SIZES.indexOf(this.size) + 1) * 5;

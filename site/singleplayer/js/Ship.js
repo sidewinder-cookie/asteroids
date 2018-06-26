@@ -48,6 +48,7 @@ class Ship {
         if (KeyEvents[" "] && this.bulletCooldown === 0) {
             let x = this.sprite.x + BULLET_OFFSET * Math.cos(this.sprite.rotation);
             let y = this.sprite.y + BULLET_OFFSET * Math.sin(this.sprite.rotation);
+            Sounds.fire.play();
             if (!this.powerups.has('double_shot')) {
                 this.bullets.push(new Bullet(
                     x,

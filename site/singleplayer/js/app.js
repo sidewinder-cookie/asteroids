@@ -2,6 +2,8 @@ const game = new PIXI.Application({ backgroundColor: 0, width: innerWidth, heigh
 
 var username = prompt("Username: ");
 
+document.getElementById("theme").volume = 0.5;
+
 const POWERUPS = [
     DoubleShot,
     Shield,

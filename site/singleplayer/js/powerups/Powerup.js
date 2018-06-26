@@ -20,5 +20,6 @@ class Powerup {
 
     collected(ship) {
         this.remove();
+        Sounds.coin.play();
     }
 }
