@@ -2,7 +2,8 @@ const game = new PIXI.Application({ backgroundColor: 0, width: innerWidth, heigh
 
 const POWERUPS = [
     DoubleShot,
-    Shield
+    Shield,
+    Heart
 ];
 
 document.body.appendChild(game.view);
@@ -76,6 +77,7 @@ function loadAssets() {
         // Listen for frame updates
         game.ticker.add(() => {
             spaceship.tick();
+            tickPowerupSpawn();
             moveAsteroids();
 
             if (state.lives > 0) state.score += 1 / 60;

@@ -8,7 +8,8 @@ class DoubleShot extends Powerup {
     }
 
     collected(ship) {
+        if (ship.powerups.has('double_shot')) return;
         super.collected(ship);
-        ship.powerups.set('double_shot', 300);
+        ship.powerups.set('double_shot', 60 * 10);
     }
 }

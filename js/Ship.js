@@ -1,12 +1,12 @@
 const BULLET_OFFSET = 10;
 
-function getTexture(has_shield, is_firing) {
-    return `ship_${has_shield}`;
+function getShipTexture(has_shield, is_firing) {
+    return `ship_${has_shield ? 'shield' : 'noshield'}${is_firing ? '_thruster' : ''}`;
 }
 
 class Ship {
     constructor(x, y) {
-        this.sprite = new PIXI.Sprite(resources.ship_noshield.texture);
+        this.sprite = new PIXI.Sprite(resources[getShipTexture(false, false)].texture);
         this.sprite.x = x;
         this.sprite.y = y;
         this.sprite.scale.x = 0.07;
@@ -32,9 +32,9 @@ class Ship {
         if (KeyEvents.w) {
             this.velocity.x = this.velocity.x + 0.5 * Math.cos(this.sprite.rotation);
             this.velocity.y = this.velocity.y + 0.5 * Math.sin(this.sprite.rotation);
-            this.sprite.setTexture(resources.ship_noshield_thruster.texture);
+            this.sprite.setTexture(resources[getShipTexture(this.powerups.has('shield'), true)].texture);
         } else {
-            this.sprite.setTexture(resources.ship_noshield.texture);
+            this.sprite.setTexture(resources[getShipTexture(this.powerups.has('shield'), false)].texture);
         }
         if (KeyEvents.a) {
             this.velocity.rotation -= 0.03;

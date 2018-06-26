@@ -60,7 +60,11 @@ class Asteroid {
     checkCollisionWithShip() {
         let distance = getDistance(this, spaceship);
         if (distance < this.sprite.width / 2 && state.invulnerable <= 0) {
-            state.lives--;
+            if (spaceship.powerups.has('shield')) {
+                spaceship.powerups.delete('shield');
+            } else {
+                state.lives--;
+            }
             if (state.lives <= 0) KeyEvents = {};
             state.invulnerable = 50;
             this.remove();

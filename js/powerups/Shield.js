@@ -8,6 +8,7 @@ class Shield extends Powerup {
     }
 
     collected(ship) {
+        if (ship.powerups.has('shield')) return;
         super.collected(ship);
         ship.powerups.set('shield', Infinity);
     }
