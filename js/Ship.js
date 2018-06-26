@@ -28,6 +28,20 @@ class Ship {
         this.powerups = new Map();
     }
 
+    stringifyPowerups() {
+        const o = {};
+        for (let key in this.powerups.keys()) {
+            o[key] = this.powerups.get(key);
+        }
+        return JSON.stringify(o);
+    }
+
+    putPowerups(d) {
+        for (let key in d) {
+            this.powerups.set(key, d[key]);
+        }
+    }
+
     tick() {
         if (KeyEvents.w) {
             this.velocity.x = this.velocity.x + 0.5 * Math.cos(this.sprite.rotation);

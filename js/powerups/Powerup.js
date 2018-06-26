@@ -7,7 +7,7 @@ class Powerup {
         this.sprite.y = y;
         this.sprite.anchor.x = 0.5;
         this.sprite.anchor.y = 0.5;
-        this.sprite.scale.set(0.25, 0.25);
+        this.sprite.scale.set(0.15, 0.15);
 
         powerupLayer.addChild(this.sprite);
     }

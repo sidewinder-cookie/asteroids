@@ -2,6 +2,8 @@ const game = new PIXI.Application({ backgroundColor: 0, width: innerWidth, heigh
 
 var username = prompt("Username: ");
 
+var asteroids = [];
+
 const POWERUPS = [
     DoubleShot,
     Shield,
@@ -61,13 +63,12 @@ function loadAssets() {
         window.resources = resources;
         window.spaceship = new Ship(game.renderer.width / 2, game.renderer.height / 2);
 
+        window.enemyShip = new Ship(game.renderer.width / 2, game.renderer.height / 2);
+
         powerupLayer = new PIXI.Container();
         game.stage.addChild(powerupLayer);
 
-        assetsLoaded();
-        assetsLoaded2();
-
-        let scoreText = new PIXI.Text(`Score: 0\n\nLives: 3`, { fill: 0xFFFFFF, fontFamily: 'emulogic' });
+        let scoreText = new PIXI.Text(`Lives: 3`, { fill: 0xFFFFFF, fontFamily: 'emulogic' });
         scoreText.position.set(15, 15);
         game.stage.addChild(scoreText);
 
@@ -78,6 +79,12 @@ function loadAssets() {
 
         // Listen for frame updates
         game.ticker.add(() => {
+            ws.send(JSON.stringify({
+                x: spaceship.sprite.x,
+                y: spaceship.sprite.y,
+                rotation: spaceship.sprite.rotation,
+                powerups: spaceship.stringifyPowerups()
+            }));
             spaceship.tick();
             tickPowerupSpawn();
             moveAsteroids();
@@ -117,7 +124,41 @@ function loadAssets() {
     });
 }
 
-loadAssets();
+const ws = new WebSocket('ws://localhost:25565');
+
+ws.onopen = () => {
+    ws.send(username);
+}
+
+function inflate(data) {
+    for (const asteroid of data.asteroids) {
+        const { x, y, xVel, yVel, rotation, size, type } = asteroid;
+        asteroids.push(new Asteroid(x, y, xVel, yVel, rotation, size, type ));
+    }
+    for (const powerup of data.powerups) {
+        const { x, y, type } = powerup;
+        const classType = {
+            'heart': Heart,
+            'double_shot': DoubleShot,
+            'shield': Shield,
+        };
+        const pI = new classType(x, y);
+        powerups.push(pI);
+    }
+}
+
+ws.onmessage = event => {
+    const data = JSON.parse(event.data);
+    if (data.t === 'READY') {
+        loadAssets(data);
+    } else {
+        const packet = JSON.parse(data);
+        const { x, y, rotation } = packet;
+        enemyShip.sprite.x = x;
+        enemyShip.sprite.y = y;
+        enemyShip.sprite.rotation = rotation;
+    }
+};
 
 function moveSpaceship() {
     if (KeyEvents.w) {

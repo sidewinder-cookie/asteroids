@@ -34,7 +34,8 @@ class Asteroid {
             randomBetween(-3, 3),
             randomBetween(-3, 3),
             randomBetween(-0.05, 0.05),
-            'large'
+            'large',
+            randomBetween(0, 2),
         );
     }
 
