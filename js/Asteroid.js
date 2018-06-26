@@ -80,7 +80,7 @@ class Asteroid {
         state.score++;
         window.shaking = (SIZES.indexOf(this.size) + 1) * 5;
         if (this.size !== 'small') {
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 3; i++) {
                 asteroids.push(new Asteroid(
                     randomBetween(-20, 20) + this.sprite.x,
                     randomBetween(-20, 20) + this.sprite.y,

@@ -48,7 +48,7 @@ class Ship {
                 this.sprite.rotation,
                 this.bulletsContainer)
             );
-            this.bulletCooldown = 7;
+            this.bulletCooldown = 14;
         }
         this.sprite.x += this.velocity.x;
         this.sprite.y += this.velocity.y;

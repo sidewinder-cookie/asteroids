@@ -1,10 +1,10 @@
-const SPEED = 7;
+const SPEED = 9;
 
 class Bullet {
     constructor(x, y, rotation, container) {
         let sprite = this.sprite = new PIXI.Graphics();
         sprite.lineStyle(0);
-        sprite.beginFill(0x00FFFF * Math.random(), 1);
+        sprite.beginFill(0xFF0000, 1);
         sprite.drawCircle(0, 0, 4);
         sprite.endFill();
         sprite.x = x;

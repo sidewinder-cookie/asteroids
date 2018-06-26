@@ -67,7 +67,7 @@ function loadAssets() {
             spaceship.tick();
             moveAsteroids();
 
-            state.score += 1 / 60;
+            if (state.lives > 0) state.score += 1 / 60;
 
             scoreText.text = `Score: ${Math.ceil(state.score)}\n\nLives: ${state.lives > 0 ? '💖'.repeat(state.lives) : '😞'} `;
 
