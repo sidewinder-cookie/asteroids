@@ -3,22 +3,21 @@
 	<link rel="stylesheet" href="stylesheet.css">
 	<title>Leaderboards</title>
 	<body>
-	<table>
+	<table id="leaderboard">
   <tr>
-    <th>Firstname</th>
-    <th>Lastname</th> 
-    <th>Age</th>
-  </tr>
-  <tr>
-    <td>Jill</td>
-    <td>Smith</td> 
-    <td>50</td>
-  </tr>
-  <tr>
-    <td>Eve</td>
-    <td>Jackson</td> 
-    <td>94</td>
+    <th>Nickname</th>
+    <th>Score</th>
   </tr>
 </table>
-</table>
+<script>
+const scores = JSON.parse(localStorage.getItem("scores") || '{}');
+const leaderboard = document.getElementById("leaderboard");
+
+for (const username in scores) {
+  const score = scores[username];
+  leaderboard.innerHTML += `<tr>
+  <td>${username}</td><td>${Math.round(score)}</td>
+</tr>`;
+}
+</script>
 </body>

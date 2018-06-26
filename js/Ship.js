@@ -45,7 +45,6 @@ class Ship {
         if (this.bulletCooldown > 0) {
             this.bulletCooldown--;
         }
-        console.log(this.powerups);
         if (KeyEvents[" "] && this.bulletCooldown === 0) {
             let x = this.sprite.x + BULLET_OFFSET * Math.cos(this.sprite.rotation);
             let y = this.sprite.y + BULLET_OFFSET * Math.sin(this.sprite.rotation);
@@ -81,7 +80,6 @@ class Ship {
         }
 
         for (const powerup of this.powerups.keys()) {
-            console.log(powerup);
             this.powerups.set(powerup, this.powerups.get(powerup) - 1);
             if (this.powerups.get(powerup) <= 0) this.powerups.delete(powerup);
         }

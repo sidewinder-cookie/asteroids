@@ -1,5 +1,7 @@
 const game = new PIXI.Application({ backgroundColor: 0, width: innerWidth, height: innerHeight });
 
+var username = prompt("Username: ");
+
 const POWERUPS = [
     DoubleShot,
     Shield,
@@ -81,6 +83,12 @@ function loadAssets() {
             moveAsteroids();
 
             if (state.lives > 0) state.score += 1 / 60;
+            else {
+                const scores = JSON.parse(localStorage.getItem('scores') || '{}');
+                if (!scores[username]) scores[username] = state.score;
+                if (state.score > scores[username]) scores[username] = state.scores;
+                localStorage.setItem('scores', JSON.stringify(scores));
+            }
 
             scoreText.text = `Score: ${Math.ceil(state.score)}\n\nLives: ${state.lives > 0 ? '💖'.repeat(state.lives) : '😞'} `;
 
