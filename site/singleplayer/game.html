@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
-<head><meta charset="utf-8"/>
+<head>
     <title>Asteroids</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.7.1/pixi.min.js"></script>
     <style>
@@ -8,6 +8,9 @@
     </style>
 </head>
 <body>
+        <audio hidden  id="theme" volume="0" autoplay=true>
+                <source src="/res/audio/mario.mp3" type="audio/mpeg">
+              </audio>
     <script src="js/input.js"></script>
     <script src="js/Bullet.js"></script>
     <script src="js/Asteroid.js"></script>
@@ -16,7 +19,9 @@
     <script src="js/powerups/DoubleShot.js"></script>
     <script src="js/powerups/Heart.js"></script>
     <script src="js/powerups/Shield.js"></script>
-    <script src="js/powerups/audiostuff.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/asteroid-spawner.js"></script>
+    <script src="js/powerup-spawner.js"></script>
+    <script src="js/audiostuff.js"></script>
 </body>
 </html>
