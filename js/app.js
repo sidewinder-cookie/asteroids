@@ -1,4 +1,4 @@
-const game = new PIXI.Application({ backgroundColor: 0, width: innerWidth, height: innerHeight });
+const game = new PIXI.Application({ backgroundColor: 0, width: 1366, height: 768 });
 
 var username = prompt("Username: ");
 
