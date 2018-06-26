@@ -2,7 +2,7 @@ const game = new PIXI.Application({ backgroundColor: 0, width: innerWidth, heigh
 
 var username = prompt("Username: ");
 
-var asteroids = [];
+var asteroids = [], powerups = [];
 
 const POWERUPS = [
     DoubleShot,
@@ -86,8 +86,6 @@ function loadAssets() {
                 powerups: spaceship.stringifyPowerups()
             }));
             spaceship.tick();
-            tickPowerupSpawn();
-            moveAsteroids();
 
             if (state.lives > 0) state.score += 1 / 60;
             else {
@@ -148,6 +146,7 @@ function inflate(data) {
 }
 
 ws.onmessage = event => {
+    console.log(event.data);
     const data = JSON.parse(event.data);
     if (data.t === 'READY') {
         loadAssets(data);
