@@ -23,7 +23,11 @@ class Ship {
 
         game.stage.tint = Math.random() * 0xFFFFFF;
 
-        window.bullets = this.bullets = [];
+        this.bullets = [];
+
+        if (!window.bullets) window.bullets = this.bullets;
+
+        this.invulnerable = 0;
 
         this.powerups = new Map();
     }
@@ -39,6 +43,24 @@ class Ship {
     putPowerups(d) {
         for (let key in d) {
             this.powerups.set(key, d[key]);
+        }
+    }
+
+    dummyTick() {
+        for (const bullet of this.bullets) {
+            bullet.tick();
+        }
+
+        for (const powerup of this.powerups.keys()) {
+            this.powerups.set(powerup, this.powerups.get(powerup) - 1);
+            if (this.powerups.get(powerup) <= 0) this.powerups.delete(powerup);
+        }
+
+        for (const powerup of powerups) {
+            let radius = powerup.sprite.width / 2;
+            if (getDistance(powerup, this) < radius) {
+                powerup.collected(this);
+            }
         }
     }
 

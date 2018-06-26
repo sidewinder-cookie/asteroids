@@ -4,6 +4,8 @@ var username = prompt("Username: ");
 
 var asteroids = [], powerups = [];
 
+var enemyShip;
+
 const POWERUPS = [
     DoubleShot,
     Shield,
@@ -17,7 +19,6 @@ var shaking = 0;
 var state = {
     lives: 3,
     score: 0,
-    invulnerable: 0,
 };
 
 var powerupLayer;
@@ -52,7 +53,7 @@ _ASSETS.map(f => ASSETS[f] = `/res/${f}.png`);
 
 const sprites = {};
 
-function loadAssets() {
+function loadAssets(data) {
     const loader = PIXI.loader;
 
     for (const asset in ASSETS) {
@@ -61,6 +62,7 @@ function loadAssets() {
 
     loader.load((loader, resources) => {
         window.resources = resources;
+
         window.spaceship = new Ship(game.renderer.width / 2, game.renderer.height / 2);
 
         window.enemyShip = new Ship(game.renderer.width / 2, game.renderer.height / 2);
@@ -77,6 +79,9 @@ function loadAssets() {
         gameOver.anchor.y = 0.5;
         gameOver.position.set(game.renderer.width / 2, game.renderer.height / 2);
 
+
+        inflate(data);
+
         // Listen for frame updates
         game.ticker.add(() => {
             ws.send(JSON.stringify({
@@ -86,6 +91,7 @@ function loadAssets() {
                 powerups: spaceship.stringifyPowerups()
             }));
             spaceship.tick();
+            enemyShip.dummyTick();
 
             if (state.lives > 0) state.score += 1 / 60;
             else {
@@ -107,12 +113,17 @@ function loadAssets() {
                 game.stage.y = 0;
             }
 
-            if (state.invulnerable > 0) state.invulnerable--;
+            if (spaceship.invulnerable > 0) spaceship.invulnerable--;
+            if (enemyShip.invulnerable > 0) enemyShip.invulnerable--;
 
             if (game.renderer.backgroundColor !== 0) {
                 game.renderer.backgroundColor -= 0x0F0000;
                 game.renderer.backgroundColor = Math.max(game.renderer.backgroundColor,
                     state.lives > 0 ? 0 : 0x550000);
+            }
+
+            for (const asteroid of asteroids) {
+                asteroid.tick();
             }
 
             if (state.lives <= 0) {
@@ -129,9 +140,10 @@ ws.onopen = () => {
 }
 
 function inflate(data) {
+    console.log(data);
     for (const asteroid of data.asteroids) {
         const { x, y, xVel, yVel, rotation, size, type } = asteroid;
-        asteroids.push(new Asteroid(x, y, xVel, yVel, rotation, size, type ));
+        asteroids.push(new Asteroid(x, y, xVel, yVel, rotation, size, type, true ));
     }
     for (const powerup of data.powerups) {
         const { x, y, type } = powerup;
@@ -140,7 +152,7 @@ function inflate(data) {
             'double_shot': DoubleShot,
             'shield': Shield,
         };
-        const pI = new classType(x, y);
+        const pI = new classType[type](x, y);
         powerups.push(pI);
     }
 }
@@ -150,9 +162,21 @@ ws.onmessage = event => {
     const data = JSON.parse(event.data);
     if (data.t === 'READY') {
         loadAssets(data);
-    } else {
-        const packet = JSON.parse(data);
-        const { x, y, rotation } = packet;
+    } else if (data.t === 'BULLET') {
+        const { x, y, rotation } = data;
+        const bullet = new Bullet(x, y, rotation, enemyShip.bulletsContainer, true);
+        enemyShip.bullets.push(bullet);
+    } else if (data.t === 'ASTEROID') {
+        const {x,
+            y,
+            xVel,
+            yVel,
+            rotation,
+            size, type } = data;
+        const asteroid = new Asteroid(x, y, xVel, yVel, rotation, size, type, true);
+        asteroids.push(asteroid);
+    }    else {
+        const { x, y, rotation } = data;
         enemyShip.sprite.x = x;
         enemyShip.sprite.y = y;
         enemyShip.sprite.rotation = rotation;

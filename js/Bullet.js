@@ -1,7 +1,7 @@
 const SPEED = 9;
 
 class Bullet {
-    constructor(x, y, rotation, container) {
+    constructor(x, y, rotation, container, isDummy = false) {
         let sprite = this.sprite = new PIXI.Graphics();
         sprite.lineStyle(0);
         sprite.beginFill(0xFF0000, 1);
@@ -16,6 +16,13 @@ class Bullet {
         this.life = 100;
 
         container.addChild(sprite);
+        
+        if (!isDummy) ws.send(JSON.stringify({
+            t: 'BULLET',
+            x,
+            y,
+            rotation,
+        }));
     }
 
     remove() {
@@ -34,7 +41,7 @@ class Bullet {
         for (const asteroid of asteroids) {
             if (asteroid.collidingWith(this)) {
                 this.remove();
-                asteroid.break();
+                asteroid.break(this.isDummy);
                 return;
             }
         }
