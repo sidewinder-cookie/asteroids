@@ -1,5 +1,9 @@
 const BULLET_OFFSET = 10;
 
+function getTexture(has_shield, is_firing) {
+    return `ship_${has_shield}`;
+}
+
 class Ship {
     constructor(x, y) {
         this.sprite = new PIXI.Sprite(resources.ship_noshield.texture);
@@ -20,6 +24,8 @@ class Ship {
         game.stage.tint = Math.random() * 0xFFFFFF;
 
         window.bullets = this.bullets = [];
+
+        this.powerups = new Map();
     }
 
     tick() {
@@ -39,15 +45,21 @@ class Ship {
         if (this.bulletCooldown > 0) {
             this.bulletCooldown--;
         }
+        console.log(this.powerups);
         if (KeyEvents[" "] && this.bulletCooldown === 0) {
             let x = this.sprite.x + BULLET_OFFSET * Math.cos(this.sprite.rotation);
             let y = this.sprite.y + BULLET_OFFSET * Math.sin(this.sprite.rotation);
-            this.bullets.push(new Bullet(
-                x,
-                y,
-                this.sprite.rotation,
-                this.bulletsContainer)
-            );
+            if (!this.powerups.has('double_shot')) {
+                this.bullets.push(new Bullet(
+                    x,
+                    y,
+                    this.sprite.rotation,
+                    this.bulletsContainer)
+                );
+            } else {
+                this.bullets.push(new Bullet(x, y, this.sprite.rotation - 0.04, this.bulletsContainer));
+                this.bullets.push(new Bullet(x, y, this.sprite.rotation + 0.04, this.bulletsContainer));
+            }
             this.bulletCooldown = 14;
         }
         this.sprite.x += this.velocity.x;
@@ -66,6 +78,19 @@ class Ship {
 
         for (const bullet of this.bullets) {
             bullet.tick();
+        }
+
+        for (const powerup of this.powerups.keys()) {
+            console.log(powerup);
+            this.powerups.set(powerup, this.powerups.get(powerup) - 1);
+            if (this.powerups.get(powerup) <= 0) this.powerups.delete(powerup);
+        }
+
+        for (const powerup of powerups) {
+            let radius = powerup.sprite.width / 2;
+            if (getDistance(powerup, this) < radius) {
+                powerup.collected(this);
+            }
         }
     }
 }

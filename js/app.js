@@ -1,5 +1,10 @@
 const game = new PIXI.Application({ backgroundColor: 0, width: innerWidth, height: innerHeight });
 
+const POWERUPS = [
+    DoubleShot,
+    Shield
+];
+
 document.body.appendChild(game.view);
 
 var shaking = 0;
@@ -9,6 +14,8 @@ var state = {
     score: 0,
     invulnerable: 0,
 };
+
+var powerupLayer;
 
 function getDistance(s1, s2) {
     return Math.sqrt(
@@ -32,7 +39,7 @@ const _ASSETS = [
     'ship_noshield',
     'ship_shield_thruster',
     'ship_shield',
-]
+].concat(POWERUPS.map(x => `powerups/${x.getIcon()}`));
 
 const ASSETS = {};
 
@@ -51,7 +58,11 @@ function loadAssets() {
         window.resources = resources;
         window.spaceship = new Ship(game.renderer.width / 2, game.renderer.height / 2);
 
+        powerupLayer = new PIXI.Container();
+        game.stage.addChild(powerupLayer);
+
         assetsLoaded();
+        assetsLoaded2();
 
         let scoreText = new PIXI.Text(`Score: 0\n\nLives: 3`, { fill: 0xFFFFFF, fontFamily: 'emulogic' });
         scoreText.position.set(15, 15);
