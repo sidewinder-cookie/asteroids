@@ -1,0 +1,23 @@
+h1 {
+
+	color: black;
+	font-size: 30px;
+	font-family: 'Hyperspace', san-serif;
+	text-transform: uppercase;
+	padding-bottom: 40px;
+	text-decoration: underline;
+
+}
+
+body {
+
+	max-height: 768px;
+	max-width: 1366;
+	font-size: 30px;
+	font-family: 'Hyperspace', san-serif;
+	color: black;
+}
+
+
+    
+
