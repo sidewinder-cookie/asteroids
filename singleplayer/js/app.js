@@ -1,6 +1,6 @@
 const game = new PIXI.Application({ backgroundColor: 0, width: innerWidth, height: innerHeight });
 
-var username = prompt("Username: ");
+var username = "sidewinder cookie";
 
 document.getElementById("theme").volume = 0.5;
 
