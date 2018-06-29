@@ -1,0 +1,53 @@
+@import "lesshat";
+
+@header-color: black; 
+@table-color: darken(black, 20%);
+@vertical-border-width: 4px;
+@horizontal-border-width: 1px;
+
+body{background-image: url("https://raw.githubusercontent.com/hydrabolt/asteroids/master/js/background2.png?token=AX9gDStdNS8ArgiIb3fG3CEmlA_VdNEPks5bO0XIwA%3D%3D");
+background-size: cover;
+
+}
+table{
+  color: black;
+  border-spacing: 0;
+  width: 90%;
+}
+
+tr:first-child{
+  background-color: @header-color;
+}
+
+tr:nth-child(2) > td{
+  border-top-width: 0;
+}
+
+tr{
+  background-color: @table-color;
+}
+
+th, td{
+  margin: 0;
+  padding: .5em 1.5em;
+  text-align: center;
+  border-width: @horizontal-border-width 0;
+  border-color: @header-color;
+  border-style: solid;
+}
+
+th{
+  border-bottom-width: @horizontal-border-width;
+}
+
+th:nth-child(even){
+  border-width: 0 @vertical-border-width;
+  border-color: @table-color;
+  border-style: solid;
+}
+
+td:nth-child(even){
+  border-width: @horizontal-border-width @vertical-border-width;
+  border-color: @header-color;
+  border-style: solid;
+}

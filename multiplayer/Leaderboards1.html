@@ -1,0 +1,23 @@
+<DOCTYPE html>
+	<head><meta charset="utf-8"/>
+	<link rel="stylesheet" href="stylesheet.css">
+	<title>Leaderboards</title>
+	<body>
+	<table id="leaderboard">
+  <tr>
+    <th>Nickname</th>
+    <th>Score</th>
+  </tr>
+</table>
+<script>
+const scores = JSON.parse(localStorage.getItem("scores") || '{}');
+const leaderboard = document.getElementById("leaderboard");
+
+for (const username in scores) {
+  const score = scores[username];
+  leaderboard.innerHTML += `<tr>
+  <td>${username}</td><td>${Math.round(score)}</td>
+</tr>`;
+}
+</script>
+</body>
